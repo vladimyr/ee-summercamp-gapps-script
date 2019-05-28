@@ -21,16 +21,29 @@ function githubUrl() {
   return args.join('/');
 }
 
-function getUserRepos(username, githubToken) {
+function githubHeaders(githubToken) {
   var authorization = Utilities.formatString('token %s', githubToken);
-  var headers = {
+  return {
     authorization: authorization,
     accept: 'application/vnd.github.v3+json',
     'user-agent': 'https://github.com/vladimyr/ee-summercamp-gapps-script'
   };
-  var url = githubUrl('users', username, 'repos');
+}
+
+function githubFetch(url, githubToken) {
+  var headers = githubHeaders(githubToken);
   var resp = UrlFetchApp.fetch(url, { headers: headers });
   return JSON.parse(resp.getContentText());
+}
+
+function getUserRepos(username, githubToken) {
+  var url = githubUrl('users', username, 'repos');
+  return githubFetch(url, githubToken);
+}
+
+function getRepoContents(username, repo, githubToken) {
+  var url = githubUrl('repos', username, repo, 'contents');
+  return githubFetch(url, githubToken);
 }
 
 /**

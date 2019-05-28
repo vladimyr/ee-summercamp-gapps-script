@@ -24,6 +24,11 @@ const isRepo = repo => repo.hasOwnProperty('fork') &&
   repo.hasOwnProperty('git_url') &&
   repo.hasOwnProperty('ssh_url');
 
+const isRepoItem = repo => repo.hasOwnProperty('type') &&
+  repo.hasOwnProperty('size') &&
+  repo.hasOwnProperty('name') &&
+  repo.hasOwnProperty('path');
+
 test('load script', t => {
   t.plan(1);
   const script = gas.require('./src', mocks);
@@ -55,6 +60,19 @@ test('fetch user repos', t => {
   t.assert(Array.isArray(resp), 'returns array');
   const repo = resp[0];
   t.assert(isRepo(repo), 'array contains user repos');
+});
+
+test('fetch repo contents', t => {
+  t.plan(2);
+  const { getRepoContents } = gas.require('./src', mocks);
+  const resp = getRepoContents(
+    'vladimyr',
+    'ee-summercamp-gapps-script',
+    process.env.GITHUB_API_TOKEN
+  );
+  t.assert(Array.isArray(resp), 'returns array');
+  const item = resp[0];
+  t.assert(isRepoItem(item), 'array contains repo content items');
 });
 
 test('invoke `#checkGithub(username)`', t => {
