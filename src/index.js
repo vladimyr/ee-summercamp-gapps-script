@@ -7,6 +7,7 @@
 /* global Environment, PropertiesService, UrlFetchApp, Utilities */
 
 var props = PropertiesService.getScriptProperties();
+var reArchive = /\.zip$|\.rar$/;
 
 function env(name) {
   return Environment[name] || props.getProperty(name);
@@ -46,14 +47,24 @@ function getRepoContents(username, repo, githubToken) {
   return githubFetch(url, githubToken);
 }
 
+function isArchive(item) {
+  return reArchive.test(item.name.trim());
+}
+
+var Result = {
+  Invalid: 'INVALID',
+  Valid: 'VALID',
+  NotFound: 'NOT_FOUND'
+};
+
 /**
  * Check if user has target repo (e.g. 'ee-summercamp-2019')
  * @param {string} username Github username
- * @returns {boolean} boolean result
+ * @returns {string} result
  * @customfunction
  */
 function checkGithub(username) {
-  if (!username) return false;
+  if (!username) return Result.Invalid;
   if (username.map) {
     return username.map(checkGithub);
   }
@@ -64,5 +75,8 @@ function checkGithub(username) {
   var match = repos.find(function (repo) {
     return reRepoName.test(repo.name.trim());
   });
-  return Boolean(match);
+  if (!match) return Result.NotFound;
+  var contents = getRepoContents(username, match.name, githubToken);
+  if (contents.some(isArchive)) return Result.Invalid;
+  return Result.Valid;
 }
