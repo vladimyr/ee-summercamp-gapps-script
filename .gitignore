@@ -12,6 +12,9 @@ npm-debug.log*
 .vscode/*
 !.vscode/launch.json
 
-# general
+# env
 .env
+src/env.js
+
+# general
 .DS_Store
