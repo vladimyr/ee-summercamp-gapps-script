@@ -64,7 +64,7 @@ var Result = {
  * @customfunction
  */
 function checkGithub(username) {
-  if (!username) return Result.Invalid;
+  if (!username) return Result.NotFound;
   if (username.map) {
     return username.map(checkGithub);
   }
@@ -76,7 +76,12 @@ function checkGithub(username) {
     return reRepoName.test(repo.name.trim());
   });
   if (!match) return Result.NotFound;
-  var contents = getRepoContents(username, match.name, githubToken);
+  var contents;
+  try {
+    contents = getRepoContents(username, match.name, githubToken);
+  } catch (err) {
+    return Result.NotFound;
+  }
   if (contents.some(isArchive)) return Result.Invalid;
   return Result.Valid;
 }
