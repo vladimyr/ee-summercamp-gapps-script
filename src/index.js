@@ -36,10 +36,10 @@ function getUserRepos(username, githubToken) {
  * @customfunction
  */
 function checkGithub(username) {
+  if (!username) return false;
   if (username.map) {
     return username.map(checkGithub);
   }
-  if (!username) return false;
   var githubToken = GITHUB_API_TOKEN || props.getProperty('GITHUB_API_TOKEN');
   var repoPattern = GITHUB_REPO_PATTERN ||
     Utilities.formatString('^%s$', props.getProperty('GITHUB_REPO_PATTERN'));
