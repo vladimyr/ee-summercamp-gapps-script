@@ -84,11 +84,11 @@ test('invoke `#checkGithub(username)`', t => {
     'returns `string`'
   );
   resp = checkGithub('Volki312');
-  t.is(resp, 'VALID', '@Volki312 has valid target repo');
+  t.is(resp, 'REPO_FOUND', '@Volki312 has valid target repo');
   resp = checkGithub('marinabakovic');
-  t.is(resp, 'INVALID', '@marinabakovic has invalid target repo');
+  t.is(resp, 'REPO_INVALID', '@marinabakovic has invalid target repo');
   resp = checkGithub('ghost');
-  t.is(resp, 'NOT_FOUND', '@ghost has NOT target repo');
+  t.is(resp, 'REPO_NOT_FOUND', '@ghost has NOT target repo');
 });
 
 test('invoke `#checkGithub([usernames])`', t => {
@@ -96,7 +96,7 @@ test('invoke `#checkGithub([usernames])`', t => {
   const { checkGithub } = gas.require('./src', mocks);
   const resp = checkGithub(['Volki312', 'marinabakovic', 'ghost']);
   t.assert(Array.isArray(resp) && resp.length === 3, 'response is array');
-  t.is(resp[0], 'VALID', '@Volki312 has valid target repo');
-  t.is(resp[1], 'INVALID', '@marinabakovic has invalid target repo');
-  t.is(resp[2], 'NOT_FOUND', '@ghost has NOT target repo');
+  t.is(resp[0], 'REPO_FOUND', '@Volki312 has valid target repo');
+  t.is(resp[1], 'REPO_INVALID', '@marinabakovic has invalid target repo');
+  t.is(resp[2], 'REPO_NOT_FOUND', '@ghost has NOT target repo');
 });

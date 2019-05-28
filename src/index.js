@@ -51,10 +51,10 @@ function isArchive(item) {
   return reArchive.test(item.name.trim());
 }
 
-var Result = {
-  Invalid: 'INVALID',
-  Valid: 'VALID',
-  NotFound: 'NOT_FOUND'
+var RepoStatus = {
+  Found: 'REPO_FOUND',
+  Invalid: 'REPO_INVALID',
+  NotFound: 'REPO_NOT_FOUND'
 };
 
 /**
@@ -64,7 +64,7 @@ var Result = {
  * @customfunction
  */
 function checkGithub(username) {
-  if (!username) return Result.NotFound;
+  if (!username) return;
   if (username.map) {
     return username.map(checkGithub);
   }
@@ -75,13 +75,12 @@ function checkGithub(username) {
   var match = repos.find(function (repo) {
     return reRepoName.test(repo.name.trim());
   });
-  if (!match) return Result.NotFound;
-  var contents;
+  if (!match) return RepoStatus.NotFound;
   try {
-    contents = getRepoContents(username, match.name, githubToken);
+    var contents = getRepoContents(username, match.name, githubToken);
+    if (contents.some(isArchive)) return RepoStatus.Invalid;
   } catch (err) {
-    return Result.NotFound;
+    return RepoStatus.Invalid;
   }
-  if (contents.some(isArchive)) return Result.Invalid;
-  return Result.Valid;
+  return RepoStatus.Found;
 }
