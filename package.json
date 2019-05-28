@@ -6,7 +6,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "node -r dotenv/config test.js | tap-spec"
+    "build": "node -r dotenv/config build/env > ./src/env.js",
+    "pretest": "npm run build",
+    "test": "node -r dotenv/config test.js | tap-spec",
+    "predeploy": "npm run build",
+    "deploy": "clasp push"
   },
   "keywords": [],
   "repository": {

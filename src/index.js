@@ -4,9 +4,13 @@
 // *************************************************************
 
 /* eslint-disable no-unused-vars */
-/* global GITHUB_API_TOKEN, GITHUB_REPO_PATTERN, PropertiesService, UrlFetchApp, Utilities */
+/* global Environment, PropertiesService, UrlFetchApp, Utilities */
 
 var props = PropertiesService.getScriptProperties();
+
+function env(name) {
+  return Environment[name] || props.getProperty(name);
+}
 
 function githubUrl() {
   var args = [].slice.call(arguments, 0);
@@ -40,9 +44,8 @@ function checkGithub(username) {
   if (username.map) {
     return username.map(checkGithub);
   }
-  var githubToken = GITHUB_API_TOKEN || props.getProperty('GITHUB_API_TOKEN');
-  var repoPattern = GITHUB_REPO_PATTERN ||
-    Utilities.formatString('^%s$', props.getProperty('GITHUB_REPO_PATTERN'));
+  var githubToken = env('GITHUB_API_TOKEN');
+  var repoPattern = Utilities.formatString('^%s$', env('GITHUB_REPO_PATTERN'));
   var reRepoName = new RegExp(repoPattern, 'i');
   var repos = getUserRepos(username, githubToken);
   var match = repos.find(function (repo) {

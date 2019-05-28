@@ -65,8 +65,8 @@ test('invoke `#checkGithub(username)`', t => {
     typeof resp, 'boolean',
     'returns `boolean`'
   );
-  resp = checkGithub('santicevic');
-  t.true(resp, '@santicevic has target repo');
+  resp = checkGithub('Volki312');
+  t.true(resp, '@Volki312 has target repo');
   resp = checkGithub('ghost');
   t.false(resp, '@ghost has NOT target repo');
 });
@@ -74,8 +74,8 @@ test('invoke `#checkGithub(username)`', t => {
 test('invoke `#checkGithub([usernames])`', t => {
   t.plan(3);
   const { checkGithub } = gas.require('./src', mocks);
-  const resp = checkGithub(['santicevic', 'ghost']);
+  const resp = checkGithub(['Volki312', 'ghost']);
   t.assert(Array.isArray(resp) && resp.length === 2, 'response is array');
-  t.true(resp[0], '@santicevic has target repo');
+  t.true(resp[0], '@Volki312 has target repo');
   t.false(resp[1], '@ghost has NOT target repo');
 });
