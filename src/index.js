@@ -34,6 +34,7 @@ function checkGithub(username) {
   if (username.map) {
     return username.map(checkGithub);
   }
+  if (!username) return false;
   var githubToken = props.getProperty('GITHUB_API_TOKEN');
   var repoPattern = Utilities.formatString('^%s$', props.getProperty('GITHUB_REPO_PATTERN'));
   var reRepoName = new RegExp(repoPattern, 'i');
